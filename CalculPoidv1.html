@@ -1,0 +1,253 @@
+
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<LINK rel="StyleSheet" type="Text/css" href="Design/1000/Default.css">
+<STYLE type="text/css">
+TABLE.Main { width:100%; }
+</STYLE>
+<STYLE type="text/css" media="print">
+.NoPrint { display: none; }
+</STYLE>
+<TITLE>Document</TITLE>
+</HEAD>
+<BODY class="PB" onload='calculPoids(); addElements();'>
+<SCRIPT language="javascript">
+function printWindow(){
+   var bV = parseInt(navigator.appVersion)
+   if (bV >= 4) window.print()
+}
+
+function addElements()
+{
+/*<form>
+<input type="button" value="Colissimo">
+<input type="button" value="Upela">
+</form>*/
+
+	var table = document.getElementsByClassName("main")[1];
+	var rowLivr = table.getElementsByTagName("tr")[9];
+	var tdLivr = rowLivr.getElementsByTagName("td")[0];
+
+	var formButtons = document.createElement("form");
+	var buttonColi = document.createElement("input");
+	buttonColi.setAttribute("type", "button");
+	buttonColi.setAttribute("value", "Enregistrer un Colissimo");
+    buttonColi.setAttribute("onClick", "EnrColi();");
+
+	var buttonUpela = document.createElement("input");
+	buttonUpela.setAttribute("type", "button");
+	buttonUpela.setAttribute("value", "Tarifs Upela");
+    buttonUpela.setAttribute("onClick", "tarifsUpela();");
+
+	formButtons.appendChild(buttonColi);
+	formButtons.appendChild(document.createElement("br"));
+	formButtons.appendChild(buttonUpela);
+
+	tdLivr.appendChild(formButtons);
+
+
+}
+
+function tarifsUpela() //ne fait rien pour le moment
+{
+    console.log("Vous avez appuyé sur le bouton Tarifs Upela");
+}
+
+function EnrColi()
+{
+    console.log("Vous avez appuyé sur le bouton Enregistrer Colissimo");
+}
+
+function calculPoids()
+{
+	//(Code: planc-epi-25x025x35) dm - cm - mm
+
+
+	var id = 14479014; //à passer en paramètre
+	var densite = 460;
+
+	var listCartLines = document.getElementsByClassName("cartline");
+
+	var rowHead = document.getElementsByClassName("carthead");
+	var newHead = document.createElement("td");
+	newHead.setAttribute("class", "cartheadpoids");
+	newHead.innerHTML = "Poids";
+	rowHead[0].appendChild(newHead);
+
+	var poidsTotal = 0;
+	var volumeTotal = 0;
+
+	
+
+	for(var i=0; i<listCartLines.length; i++)
+	{
+		var item= listCartLines[i];
+		var code = item.getElementsByClassName("itemcode")[0].innerText;
+
+		var qty = item.getElementsByClassName("cartlineqty")[0].innerText;
+
+		var splitted1 = code.split('-');
+
+		var dim1 = splitted1[splitted1.length-1];
+		var dim2 = dim1.substring(0,dim1.length-1);
+
+		var splitted2 = dim2.split('x');
+
+		var longueur = splitted2[0] * 10;
+		var largeur = splitted2[1];
+		var epaisseur = splitted2[2] / 10;
+
+		var volume = (longueur * largeur * epaisseur) / 1000000;
+		var poids = densite * volume;
+
+		poidsTotal += poids * qty;
+		volumeTotal += volume;
+
+		var newTd = document.createElement("td");
+		newTd.setAttribute("class", "cartlinepoids");
+		newTd.innerHTML = qty*poids + " kg";
+		item.appendChild(newTd);
+
+	}
+
+	
+	var table = document.getElementsByClassName("main")[1];
+	var rowLivr = table.getElementsByTagName("tr")[9];
+	var tdLivr = rowLivr.getElementsByTagName("td")[0];
+///////ajout de div poids et volume
+	
+	var newDivLivr = document.createElement("div");
+
+	var newSpanVol = document.createElement("span");
+	newSpanVol.innerHTML = "Volume total : " + volumeTotal;
+	newDivLivr.appendChild(newSpanVol);
+	newDivLivr.appendChild(document.createElement("br"));
+	var newSpanPoids = document.createElement("span");
+	newSpanPoids.innerHTML = "Poids total : " + poidsTotal;
+	newDivLivr.appendChild(newSpanPoids);
+	tdLivr.appendChild(newDivLivr);
+
+////////ajout div Colissimo
+	var newDivColi = document.createElement("div");
+	var newSpanColi = document.createElement("span");
+	var newSpanHeadColi = document.createElement("span");
+	var newSpanHeadBColi = document.createElement("b");
+
+	newSpanHeadBColi.innerHTML = "Tarif Colissimo";
+	if(poidsTotal > 30)
+	{
+		newSpanColi.innerHTML = "Trop lourd de : " + (poidsTotal - 30) + " kg";
+	}
+	else
+	{
+		newSpanColi.innerHTML = "Poids ok";
+	}
+	newDivColi.appendChild(newSpanHeadColi);
+	newSpanHeadColi.appendChild(newSpanHeadBColi);
+	newDivColi.appendChild(document.createElement("br"));
+	newDivColi.appendChild(newSpanColi);
+	tdLivr.appendChild(newDivColi);
+
+	
+
+}
+</SCRIPT>
+<TABLE class="Main" border="0" cellpadding="0" cellspacing="2">
+
+<TR class="NoPrint">
+	<TD class="NoPrint">
+		<TABLE border="0" cellspacing="0" cellpadding="0" width="100%">
+		<TR>
+			<TD align="left"><A class="PBBtnStd" href="javascript:printWindow()">[Imprimer]</A></TD>
+			<TD align="right"><A class="PBBtnStd" href="javascript:window.close();">[Fermer cette fenêtre]</A></TD>
+		</TR>
+		</TABLE>
+	</TD>
+</TR>
+</TABLE>
+
+<TABLE class="Main" border="0" cellpadding="0" cellspacing="2">
+<TR class="NoPrint"><TD class="NoPrint"><HR class="PBMain"></TD></TR>
+<TR>
+	<TD>
+		<TABLE border="0" cellspacing="0" cellpadding="0" width="100%">
+		<TR>
+			<TD align="left" valign="top"><FONT class="PBPTitle">Commande&nbsp;#17971946</FONT>&nbsp;&nbsp;<IMG src="Images/FlagL0.gif" border="0" align="absmiddle"></TD>
+			<TD align="right" valign="top"><FONT class="PBDate">12 mars 2017</FONT></TD>
+		</TR>
+		</TABLE>
+	</TD>
+</TR>
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Informations client</FONT></TD></TR>
+<TR><TD valign="top"><FONT class="PBMainTxt"><div class="oxAddrLFullName oxBill">M. Alain David (alain3858@hotmail.fr)</div><div class="oxAddrLPhone oxBill">Téléphone: +33 6 51 30 75 51</div></FONT></TD></TR>
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Adresse de facturation</FONT>	</TD></TR>
+<TR><TD valign="top"><FONT class="PBMainTxt"><div class="oxAddrLAddress oxBill"><div class="oxAddrLAddressL3">693 rue principale</div></div><div class="oxAddrLCity oxBill">Valbonnais, Isère 38740</div><div class="oxAddrLCountry oxBill">France métropolitaine</div></FONT></TD>
+</TR>	
+
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Adresse de livraison</FONT></TD></TR>
+<TR><TD valign="top"><FONT class="PBMainTxt"><div class="oxAddrLFullName oxShip">M. Alain David</div><div class="oxAddrLPhone oxShip">Téléphone: +33 6 51 30 75 51</div><div class="oxAddrLAddress oxShip"><div class="oxAddrLAddressL3">693 rue principale</div></div><div class="oxAddrLCity oxShip">Valbonnais, Isère 38740</div><div class="oxAddrLCountry oxShip">France métropolitaine</div></FONT></TD></TR>
+
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Mode de livraison</FONT></TD></TR>
+<TR>
+	<TD valign="top"><FONT class="PBMainTxt">&emsp; <b>PAR TRANSPORTEUR</b> (38) - 20 kg < p &#8804; 100 kg</FONT>
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Mode de paiement</FONT></TD></TR>
+<TR><TD valign="top"><FONT class="PBMainTxt"><b>Compte PayPal</b></FONT></TD></TR>
+
+<TR><TD valign="top"><FONT class="PBSTitle"><HR class="PBSub">Détail</FONT></TD></TR>
+<TR><TD valign="top">
+<table class="shopcarttable">
+<tr class="carthead">
+	<td class="cartheadname"><font class="PBColHead">Article</font></td>
+	<td class="cartheadprice"><font class="PBColHead">Prix unitaire</font></td>
+	<td class="cartheadqty"><font class="PBColHead">Quantité</font></td>
+	<td class="cartheadtotal"><font class="PBColHead">&nbsp;Montant</font></td>
+</tr>
+<tr class="cartline" data-pdt-id="14479052" data-pdt-type="">
+	<td class="cartlinename"><font class="PBMainTxt">Planche sapin/épicéa massif - L &le; 4m</font><font class="PBMainTxt"><br /><span class="itemcode">(Code: planc-epi-25x025x35)</span></font><br /><font class="PBStatic">longueur : </font><font class="PBMainTxt">2,5 m</font><br /><font class="PBStatic">largeur : </font><font class="PBMainTxt">25 cm</font><br /><font class="PBStatic">épaisseur : </font><font class="PBMainTxt">35 mm</font></td>
+	<td class="cartlineprice"><font class="PBCurrency">11,42&nbsp;&euro;</font></td>
+	<td class="cartlineqty"><font class="PBNumber"><span class="offereditemqty">5</span></font></td>
+	<td class="cartlinetotal"><font class="PBCurrency">57,10&nbsp;&euro;</font></td>
+</tr>
+<tr class="cartline" data-pdt-id="14479014" data-pdt-type="">
+	<td class="cartlinename"><font class="PBMainTxt">Planche sapin/épicéa massif - L &le; 4m</font><font class="PBMainTxt"><br /><span class="itemcode">(Code: planc-epi-25x010x27)</span></font><br /><font class="PBStatic">longueur : </font><font class="PBMainTxt">2,5 m</font><br /><font class="PBStatic">largeur : </font><font class="PBMainTxt">10 cm</font><br /><font class="PBStatic">épaisseur : </font><font class="PBMainTxt">27 mm</font></td>
+	<td class="cartlineprice"><font class="PBCurrency">3,53&nbsp;&euro;</font></td>
+	<td class="cartlineqty"><font class="PBNumber"><span class="offereditemqty">7</span></font></td>
+	<td class="cartlinetotal"><font class="PBCurrency">24,71&nbsp;&euro;</font></td>
+</tr>
+<tr class="cartsubtotal">
+	<td colspan="3"><font class="PBColHead">Sous-total TTC</font></td>
+	<td><font class="PBCurrency">81,81&nbsp;&euro;</font></td>
+</tr>
+<tr class="cartspacer"><td colspan="4"></td></tr>
+<tr class="cartshipping">
+	<td class="cartshipname" colspan="3"><font class="PBColHead">Frais de port TTC</font><br /><font class="PBMainTxt">&emsp; <b>PAR TRANSPORTEUR</b> (38) - 20 kg < p &#8804; 100 kg</font></td>
+	<td class="cartshipprice"><font class="PBCurrency">36,32&nbsp;&euro;</font></td>
+</tr>
+<tr class="cartspacer"><td colspan="4"></td></tr>
+<tr class="carttotal">
+	<td class="carttotalname" colspan="3"><font class="PBColHead">Montant Total TTC</font></td>
+	<td class="carttotalprice"><font class="PBCurrency">118,13&nbsp;&euro;</font></td>
+</tr>
+</table>
+	</TD>
+</TR>
+</TABLE>
+<br />
+<table class="taxdetailtable">
+<tr class="taxdetailhead">	<td><font class="PBStatic">Base HT</font></td>
+	<td><font class="PBStatic">Taux</font></td>
+	<td><font class="PBStatic">Montant TVA</font></td>
+</tr>
+
+<tr>	<td nowrap align="right"><font class="PBNumber">68,18</font></td>
+	<td nowrap align="right"><font class="PBNumber">20%</font></td>
+	<td nowrap align="right"><font class="PBNumber">13,63</font></td>
+</tr>
+
+</table>
+
+</BODY>
+</HTML>
